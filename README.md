@@ -12,7 +12,7 @@ Ensure you have the following dependencies installed:
 
 ### Software Requirements:
 
-- [ROS2 (Foxy or later, Humble preferred)](https://docs.ros.org/en/foxy/Installation.html)
+- [ROS2 (Foxy or later, Humble preferred)](https://docs.ros.org/en/humble/Installation.html)
 - [Python 3.8+](https://www.python.org/downloads/)
 - [MATLAB](https://www.mathworks.com/products/matlab.html)
 
@@ -33,13 +33,13 @@ This script automates the extraction of images and point clouds from a given ROS
 #### Command:
 
 ```bash
-python run_rosbag_pipeline.py <bagfile_name>
+python create_file_for_label.py <bagfile_name>
 ```
 
 #### Example:
 
 ```bash
-python run_rosbag_pipeline.py 1_2_3
+python rcreate_file_for_label.py 1_2_3
 ```
 
 This will:
