@@ -1,7 +1,5 @@
 # Label the AoC Rosbag Data
 
-# Data Labeling Pipeline
-
 ## Overview
 
 This repository contains scripts for extracting images and point clouds from ROS2 bag files for data labeling. The pipeline involves converting ROS2 bag files into images and point clouds, which are then stored in labeled directories for further processing.
