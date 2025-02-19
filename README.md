@@ -49,23 +49,11 @@ This will:
 3. Play the ROS2 bag file at a reduced speed (`0.2x`).
 4. Save timestamps in MATLAB-compatible `.mat` format.
 
-### Step 2: Extract Images from ROS Topics
+##### Extract images from the bag file into a labeled directory.
 
-The `image_extractor.py` script subscribes to multiple camera topics, extracts images, and stores them with corresponding timestamps.
+The `create_file_for_label.py` will call `image_extractor.py` script subscribes to multiple camera topics, extracts images, and stores them with corresponding timestamps.
 
-#### Command:
-
-```bash
-python image_extractor.py <output_folder>
-```
-
-#### Example:
-
-```bash
-python image_extractor.py dataset_output
-```
-
-#### Image Topics:
+Image Topics:
 
 - `/front_camera/image_raw` → `output_images/`
 - `/fisheye_image_SN00013` → `fisheye_images_13/`
@@ -74,29 +62,17 @@ python image_extractor.py dataset_output
 
 Each extracted image is saved with a timestamped filename, and timestamps are stored in `timestamps.mat`.
 
-### Step 3: Extract Point Clouds from ROS Topics
+##### Extract point clouds into another labeled directory.
 
-The `pointcloud_extractor.py` script subscribes to a LiDAR topic and extracts point clouds.
+The `create_file_for_label.py` will call  `pointcloud_extractor.py` script subscribes to a LiDAR topic and extracts point clouds.
 
-#### Command:
-
-```bash
-python pointcloud_extractor.py <output_folder>
-```
-
-#### Example:
-
-```bash
-python pointcloud_extractor.py dataset_output
-```
-
-#### Point Cloud Topic:
+Point Cloud Topic:
 
 - `/front_lidar/points` → `output_pointclouds/`
 
 Each point cloud is saved in `.pcd` format, and timestamps are stored in `timestamps.mat`.
 
-### Step 4: Import Data into MATLAB and Label Using Ground Truth Labeller
+### Step 2: Import Data into MATLAB and Label Using Ground Truth Labeller
 
 After extracting the images and point clouds, the next step is to import them into MATLAB and use the Ground Truth Labeller tool for annotation.
 
@@ -107,7 +83,7 @@ After extracting the images and point clouds, the next step is to import them in
 
 For a step-by-step guide, refer to [this tutorial](video_link).
 
-### Step 5: Export Labels to JSON
+### Step 3: Export Labels to JSON
 
 Once labeling is complete, the annotations need to be exported in JSON format for further processing using gTruth\_to\_json.m. It willl do:
 
