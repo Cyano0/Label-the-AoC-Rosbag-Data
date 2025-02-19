@@ -79,7 +79,7 @@ After extracting the images and point clouds, the next step is to import them in
 3. Use the Ground Truth Labeller tool to annotate objects of interest in the images.
 4. Ensure that the labels are consistent across different viewpoints and sensors.
 
-For a step-by-step guide, refer to [this tutorial](video_link).
+For a step-by-step guide, refer to [this tutorial](https://universityoflincoln-my.sharepoint.com/:v:/g/personal/zhuang_lincoln_ac_uk/Ed-UfqKa-zRCorqXSayXZ-gBDXAZqGJH1J2AqO5NizRhAA?e=58oTOc&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D).
 
 ### Step 3: Export Labels to JSON
 
