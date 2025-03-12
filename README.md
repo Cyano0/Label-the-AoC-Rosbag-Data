@@ -17,10 +17,14 @@ Ensure you have the following dependencies installed:
 
 ### Step 1: Check Teams for the list of tasks.
 
-Go to Team on Teams, and find your own channel. There is an Excel file lists all the bagfile names for you to check.
+Go to Team on Teams, and find your own channel. There is an Excel file (list\_of\_bags) lists all the bagfile names for you to check.
+![image](https://github.com/user-attachments/assets/a8d014a7-957e-4fa1-b061-bdc2783dae61)
+
 
 ### Step 2: Download the zip file to your own computer, and extract it.
 
+The bag files are under **Files**.
+![image](https://github.com/user-attachments/assets/f91a8576-cc92-4918-bc05-c1f230ac8912)
 
 ### Step 3: Import Data into MATLAB and Label Using Ground Truth Labeller
 
@@ -50,8 +54,13 @@ This JSON file will contain timestamps, filenames, and bounding box annotations 
 
 1. **Rename** the json_files folder to {rosbagname}\_json\_files to help distinguish with different json files. E.g. in\_straw\_2pick\_diff\_st\_10\_31\_2024\_1\_label\_json\_files.
 2. Upload it to a folder called JsonFiles in your channel.
-3. Update information in the Excel file lists all the bagfile names in the channel.
+3. Update information in the Excel file lists all the bagfile names in the channel:
+  (1) Status: choose the status of the bag here (completed? In progress?)
+  (2) Time when completed (date): put a date here
+  (3) How long it took: put the time length you used for labelling.
+  (4) Other notes: optional, anything you want to note down.
 
+![image](https://github.com/user-attachments/assets/6d75ec0e-70e3-49f5-811b-e466995691fc)
 
 
 ## Notes
