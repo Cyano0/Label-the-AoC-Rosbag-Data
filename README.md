@@ -10,67 +10,19 @@ Ensure you have the following dependencies installed:
 
 ### Software Requirements:
 
-- [ROS2 (Foxy or later, Humble preferred)](https://docs.ros.org/en/humble/Installation.html)
-- [Python 3.8+](https://www.python.org/downloads/)
 - [MATLAB](https://www.mathworks.com/products/matlab.html)
 
-### Python Packages:
-
-- OpenCV: `pip install opencv-python`
-- NumPy: `pip install numpy`
-- SciPy: `pip install scipy`
-- Open3D: `pip install open3d`
-- SciPy IO: `pip install scipy`
 
 ## Usage
 
-### Step 1: Run the ROS2 Bag Processing Pipeline
+### Step 1: Check Teams for the list of tasks.
 
-This script automates the extraction of images and point clouds from a given ROS2 bag file.
+Go to Team on Teams, and find your own channel. There is an Excel file for you to check.
 
-#### Command:
+### Step 2: Download the zip file to your own computer, and extract it.
 
-```bash
-python create_file_for_label.py <bagfile_name>
-```
 
-#### Example:
-
-```bash
-python rcreate_file_for_label.py 1_2_3
-```
-
-This will:
-
-1. Extract images from the bag file into a labeled directory.
-2. Extract point clouds into another labeled directory.
-3. Play the ROS2 bag file at a reduced speed (`0.2x`).
-4. Save timestamps in MATLAB-compatible `.mat` format.
-
-##### Extract images from the bag file into a labeled directory.
-
-The `create_file_for_label.py` will call `image_extractor.py` script subscribes to multiple camera topics, extracts images, and stores them with corresponding timestamps.
-
-Image Topics:
-
-- `/front_camera/image_raw` → `output_images/`
-- `/fisheye_image_SN00013` → `fisheye_images_13/`
-- `/fisheye_image_SN00012` → `fisheye_images_12/`
-- `/fisheye_image_SN00014` → `fisheye_images_14/`
-
-Each extracted image is saved with a timestamped filename, and timestamps are stored in `timestamps.mat`.
-
-##### Extract point clouds into another labeled directory.
-
-The `create_file_for_label.py` will call  `pointcloud_extractor.py` script subscribes to a LiDAR topic and extracts point clouds.
-
-Point Cloud Topic:
-
-- `/front_lidar/points` → `output_pointclouds/`
-
-Each point cloud is saved in `.pcd` format, and timestamps are stored in `timestamps.mat`.
-
-### Step 2: Import Data into MATLAB and Label Using Ground Truth Labeller
+### Step 3: Import Data into MATLAB and Label Using Ground Truth Labeller
 
 After extracting the images and point clouds, the next step is to import them into MATLAB and use the Ground Truth Labeller tool for annotation.
 
@@ -81,27 +33,22 @@ After extracting the images and point clouds, the next step is to import them in
 
 For a step-by-step guide, refer to [this tutorial](https://universityoflincoln-my.sharepoint.com/:v:/g/personal/zhuang_lincoln_ac_uk/Ed-UfqKa-zRCorqXSayXZ-gBDXAZqGJH1J2AqO5NizRhAA?e=58oTOc&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D).
 
-### Step 3: Export Labels to JSON
+### Step 4: Export Labels to JSON
 
 Once labeling is complete, the annotations need to be exported in JSON format for further processing using gTruth\_to\_json.m. It willl do:
 
 1. Extract available label definitions from the MATLAB workspace.
 2. Load corresponding timestamps for each labeled frame.
 3. Format the labeled data into a structured JSON format.
-4. Save the JSON file in the dataset directory.
+4. Save the JSON file in a new directory.
 
 This JSON file will contain timestamps, filenames, and bounding box annotations for each labeled image and pcd file.
 
-## Shutdown and Cleanup
 
-If you need to stop the scripts:
-
-1. Use `Ctrl+C` to terminate running scripts.
-2. Ensure timestamps are saved before shutdown.
 
 ## Notes
 
-- Ensure the ROS2 environment is correctly sourced before running scripts.
+- Ensure Matlab is installed correctly.
 - MATLAB-compatible timestamps (`timestamps.mat`) help synchronize images and point clouds.
 
 ## License
