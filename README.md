@@ -17,7 +17,7 @@ Ensure you have the following dependencies installed:
 
 ### Step 1: Check Teams for the list of tasks.
 
-Go to Team on Teams, and find your own channel. There is an Excel file for you to check.
+Go to Team on Teams, and find your own channel. There is an Excel file lists all the bagfile names for you to check.
 
 ### Step 2: Download the zip file to your own computer, and extract it.
 
@@ -40,9 +40,17 @@ Once labeling is complete, the annotations need to be exported in JSON format fo
 1. Extract available label definitions from the MATLAB workspace.
 2. Load corresponding timestamps for each labeled frame.
 3. Format the labeled data into a structured JSON format.
-4. Save the JSON file in a new directory.
+4. Save the JSON files for all resources (cameras and LiDar) together in a new directory called **json\_files**. You can see something like:
+![image](https://github.com/user-attachments/assets/116bf385-812e-4234-94b0-86290d65adf8)
 
 This JSON file will contain timestamps, filenames, and bounding box annotations for each labeled image and pcd file.
+
+
+### Step 5: Rename and upload JSON files to Teams 
+
+1. **Rename** the json_files folder to {rosbagname}\_json\_files to help distinguish with different json files. E.g. in\_straw\_2pick\_diff\_st\_10\_31\_2024\_1\_label\_json\_files.
+2. Upload it to a folder called JsonFiles in your channel.
+3. Update information in the Excel file lists all the bagfile names in the channel.
 
 
 
