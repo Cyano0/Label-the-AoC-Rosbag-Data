@@ -1,3 +1,21 @@
+% ✅ Check Operating System
+if ispc
+    osType = 'Windows';
+elseif isunix
+    osType = 'Unix/Linux';
+elseif ismac
+    osType = 'Mac';
+else
+    osType = 'Unknown';
+end
+disp(['Operating System: ', osType]);
+
+% Create a separate folder for JSON files (fullfile handles OS differences)
+outputFolder = fullfile(pwd, 'json_files');
+if ~exist(outputFolder, 'dir')
+    mkdir(outputFolder);
+end
+
 % Load gTruth from workspace (or from a .mat file)
 % Uncomment if loading from a .mat file:
 % load('gTruth.mat');
@@ -55,12 +73,12 @@ for s = 1:numel(sourceNames)
 
             if ismember(labelName, labelTable.Properties.VariableNames) % Check if label exists in the table
                 boundingBox = labelTable.(labelName){i}; % Extract bounding box
-                
+
                 % ✅ Convert cell to numeric array if necessary
                 if iscell(boundingBox)
                     boundingBox = cell2mat(boundingBox);
                 end
-                
+
                 % ✅ Ensure bounding box exists before adding
                 if ~isempty(boundingBox) && all(~isnan(boundingBox(:)))
                     if ~isKey(labelMap, labelName) % Prevent duplicate labels
@@ -90,8 +108,8 @@ for s = 1:numel(sourceNames)
     % ✅ Convert structured data to JSON
     jsonData = jsonencode(labeledData, 'PrettyPrint', true);
 
-    % ✅ Save JSON file per topic
-    jsonFile = fullfile(pwd, topicName, 'labeled_data.json');
+    % ✅ Save JSON file per topic in the separate folder with topic name in the filename
+    jsonFile = fullfile(outputFolder, sprintf('labeled_data_%s.json', topicName));
     fid = fopen(jsonFile, 'w');
     fwrite(fid, jsonData, 'char');
     fclose(fid);
