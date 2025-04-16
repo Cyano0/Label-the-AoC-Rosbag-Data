@@ -34,15 +34,13 @@ imageLabels = unique(labelDefinitions.Name(1:numLabels)); % Take only the 2D lab
 disp('🔍 Extracted Image Labels:');
 disp(imageLabels);
 
-% ✅ Process each topic separately
+% Process each topic separately
 for s = 1:numel(sourceNames)
     topicName = sourceNames{s};
     labelTable = gTruth.ROILabelData.(topicName); % Extract label data
 
-    % ✅ Define timestamp file location
+    % Define timestamp file location and load timestamps if available
     timestampFile = fullfile(pwd, topicName, 'timestamps.mat');
-
-    % ✅ Load timestamps if available
     if isfile(timestampFile)
         timestampStruct = load(timestampFile);
         timestamps = sort(timestampStruct.timestamps); % Sort timestamps
@@ -52,67 +50,107 @@ for s = 1:numel(sourceNames)
         timestamps = linspace(0, 1, height(labelTable)); % Placeholder timestamps
     end
 
-    % ✅ Initialize labeled data for this topic
+    % Initialize structured data for this topic
     numFrames = height(labelTable);
-    labeledData = repmat(struct('Timestamp', NaN, 'File', '', 'Labels', struct([])), numFrames, 1);
+    labeledData = repmat(struct('Timestamp', NaN, 'File', '', 'Labels', []), numFrames, 1);
 
-    % ✅ Get label names dynamically from gTruth.LabelDefinitions (image labels)
-    labelNames = imageLabels; % Use ordered labels from LabelDefinitions
+    % Get label names dynamically from gTruth.LabelDefinitions (only image labels)
+    labelNames = imageLabels; % for example, {'human', ...}
 
+    % Process each frame
     for i = 1:numFrames
-        % ✅ Assign timestamps sequentially (sorted order)
         timestamp = timestamps(i);
-        file = sprintf('%f.png', timestamp); % Generate correct filename
+        file = sprintf('%f.png', timestamp); % generate filename for the frame
 
-        % ✅ Use a dictionary to prevent duplicate labels per frame
-        labelMap = containers.Map;
+        % Initialize an empty array of label entries for this frame.
+        labels = struct('Class', {}, 'BoundingBoxes', {});
 
-        % ✅ Extract bounding boxes for labels
+        % Process each label defined in the data
         for j = 1:numel(labelNames)
             labelName = labelNames{j};
 
-            if ismember(labelName, labelTable.Properties.VariableNames) % Check if label exists in the table
-                boundingBox = labelTable.(labelName){i}; % Extract bounding box
+            if ismember(labelName, labelTable.Properties.VariableNames)
+                entry = labelTable.(labelName){i}; % Get the stored data from the cell
 
-                % ✅ Convert cell to numeric array if necessary
-                if iscell(boundingBox)
-                    boundingBox = cell2mat(boundingBox);
+                if strcmp(labelName, 'human')
+                    % Special processing for the "human" label.
+                    % Check that the cell contains a struct array with fields 'id' and 'Position'
+                    if isstruct(entry) && isfield(entry, 'id') && isfield(entry, 'Position')
+                        % Process each ROI separately
+                        for roi_idx = 1:numel(entry)
+                            roi_entry = entry(roi_idx);
+                            % Convert the 'id' field (a string like '1') into a numeric value.
+                            id_value = str2double(roi_entry.id);
+                            if ~isnan(id_value) && ismember(id_value, 0:5)
+                                newLabelName = sprintf('human%d', id_value);
+                            else
+                                newLabelName = 'human';
+                            end
+                            % Extract the bounding box using the 'Position' field.
+                            bbox = roi_entry.Position;
+                            if iscell(bbox)
+                                bbox = cell2mat(bbox);
+                            end
+                            % Validate bbox if it is numeric
+                            if ~isempty(bbox)
+                                if isnumeric(bbox)
+                                    valid = all(~isnan(bbox(:)));
+                                else
+                                    valid = true;
+                                end
+                                if valid
+                                    labels(end+1).Class = newLabelName;      %#ok<SAGROW>
+                                    labels(end).BoundingBoxes = bbox;
+                                end
+                            end
+                        end
+                        % Since we have processed all "human" ROIs individually, move on.
+                        continue;
+                    else
+                        % Fallback: if entry isn’t in the expected format, process as a generic label.
+                        newLabelName = 'human';
+                        bbox = entry;
+                    end
+                else
+                    % For labels other than "human", use the original label name.
+                    newLabelName = labelName;
+                    bbox = entry;
                 end
 
-                % ✅ Ensure bounding box exists before adding
-                if ~isempty(boundingBox) && all(~isnan(boundingBox(:)))
-                    if ~isKey(labelMap, labelName) % Prevent duplicate labels
-                        labelMap(labelName) = boundingBox;
+                % If the bounding box is stored in a cell, convert it to a numeric array.
+                if iscell(bbox)
+                    bbox = cell2mat(bbox);
+                end
+                if ~isempty(bbox)
+                    if isnumeric(bbox)
+                        valid = all(~isnan(bbox(:)));
+                    else
+                        valid = true;
+                    end
+                    if valid
+                        labels(end+1).Class = newLabelName;      %#ok<SAGROW>
+                        labels(end).BoundingBoxes = bbox;
                     end
                 end
             end
         end
 
-        % ✅ Convert dictionary to struct array
-        labels = struct([]);
-        keys = labelMap.keys;
-        for k = 1:numel(keys)
-            labels(end+1).Class = keys{k};
-            labels(end).BoundingBoxes = labelMap(keys{k});
-        end
-
-        % ✅ Store structured data
+        % Store the frame data.
         labeledData(i).Timestamp = timestamp;
         labeledData(i).File = file;
         labeledData(i).Labels = labels;
 
-        % ✅ Debugging: Print stored labels per frame
+        % Optional: Print labels for debugging.
         disp(['📝 Frame ', num2str(i), ' in ', topicName, ': ', jsonencode(labels)]);
     end
 
-    % ✅ Convert structured data to JSON
+    % Convert the data for this topic to JSON.
     jsonData = jsonencode(labeledData, 'PrettyPrint', true);
 
-    % ✅ Save JSON file per topic in the separate folder with topic name in the filename
+    % Save the JSON file in the designated output folder.
     jsonFile = fullfile(outputFolder, sprintf('labeled_data_%s.json', topicName));
     fid = fopen(jsonFile, 'w');
     fwrite(fid, jsonData, 'char');
     fclose(fid);
-
     disp(['✅ Labeled data saved to ', jsonFile]);
 end
