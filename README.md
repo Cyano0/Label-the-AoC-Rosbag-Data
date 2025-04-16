@@ -37,9 +37,12 @@ After extracting the images and point clouds, the next step is to import them in
 
 For a step-by-step guide, refer to [this tutorial](https://universityoflincoln-my.sharepoint.com/:v:/g/personal/zhuang_lincoln_ac_uk/Ed-UfqKa-zRCorqXSayXZ-gBDXAZqGJH1J2AqO5NizRhAA?e=58oTOc&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D).
 
+**If you want to use the YOLOv8 for semi auto labelling, please download the detector following [this page](https://github.com/LCAS/MATLAB_yolov8_human_labeling).**
+
+
 ### Step 4: Export Labels to JSON
 
-Once labeling is complete, the annotations need to be exported in JSON format for further processing using gTruth\_to\_json.m. It willl do:
+Once labeling is complete, the annotations need to be exported in JSON format for further processing using **gTruth\_to\_json\_new.m**. It will do:
 
 1. Extract available label definitions from the MATLAB workspace.
 2. Load corresponding timestamps for each labeled frame.
@@ -49,8 +52,48 @@ Once labeling is complete, the annotations need to be exported in JSON format fo
 
 This JSON file will contain timestamps, filenames, and bounding box annotations for each labeled image and pcd file.
 
+### Step 5: Use Python Tool for checking labelling results.
 
-### Step 5: Rename and upload JSON files to Teams 
+1. Download **check_json.py** fom this page.
+
+2. **Open Command Prompt**:  
+   - Press `Win + R`, type `cmd`, and hit **Enter**.
+
+3. **Navigate to the directory** containing your script:  
+   ```bash
+   cd C:\path\to\your\scripts
+   ```
+
+4. Run the script:
+  
+  4.1 Default Python command (if python is on your PATH):
+
+  ```bash
+  python check_json.py
+  ```
+  
+  OR
+  
+  4.2 Explicit Python 3 (if you need to distinguish versions):
+    
+  ```bash
+  python3 check_json.py
+  ```
+
+You can see this video: https://universityoflincoln-my.sharepoint.com/:v:/g/personal/zhuang_lincoln_ac_uk/EdDhudeM1JtKgoPtqU-G04cBBUUzSIFZ8E7Q151D6tjH5Q?e=zQh5OS.
+
+There are two ways of checking the labels:
+
+#### Method 1:
+
+Use the Python Tool to go through all images.
+
+#### Method 2:
+
+Check your JSON files for information of 	"human0" if it exist then go to that image and correct it using Python Tool to navigate to that page and correct it.
+
+
+### Step 6: Rename and upload JSON files to Teams 
 
 1. **Rename** the json_files folder to {rosbagname}\_json\_files to help distinguish with different json files. E.g. in\_straw\_2pick\_diff\_st\_10\_31\_2024\_1\_label\_json\_files.
 2. Upload it to a folder called JsonFiles in your channel.
