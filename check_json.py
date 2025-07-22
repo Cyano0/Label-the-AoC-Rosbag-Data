@@ -12,6 +12,9 @@ class LabelEditorApp:
         self.data = self.load_json(json_path)
         self.index = 0  # current image index in self.data
 
+        # AUTOMATIC SYNC: no button needed
+        self.sync_json_filenames(cutoff=0.6, require_equal_counts=True)
+
         # Predefined labels and fixed colors.
         self.label_options = ["human1", "human2", "human3", "human4", "human5"]
         self.class_colors = {
@@ -70,6 +73,67 @@ class LabelEditorApp:
         self.canvas.bind("<ButtonRelease-1>", self.on_canvas_release)
 
         self.display_image()
+
+    def sync_json_filenames(self, cutoff: float = 0.6, require_equal_counts: bool = True):
+        """
+        1) If require_equal_counts is True, abort (with a warning) when
+           len(self.data) != number of image files in self.image_folder.
+        2) Fuzzy‑match each record['File'] basename against the folder.
+        3) If all match above cutoff, rewrite record['File'], sort the list
+           by the timestamped basename, overwrite self.json_path in place,
+           refresh the display, and show a success message.
+        """
+        # 1) gather files and counts
+        data     = self.data
+        img_exts = {'.png','.jpg','.jpeg','.tif','.bmp'}  # adjust as needed
+        imgs     = [f for f in os.listdir(self.image_folder)
+                    if os.path.splitext(f)[1].lower() in img_exts]
+
+        if require_equal_counts and len(data) != len(imgs):
+            messagebox.showwarning(
+                "Count mismatch",
+                f"JSON has {len(data)} entries but found {len(imgs)} image files."
+            )
+            return False
+
+        basenames = [os.path.splitext(f)[0] for f in imgs]
+        matched   = []
+
+        # 2) fuzzy‑match
+        for rec in data:
+            orig = rec.get("File", "")
+            base = os.path.splitext(orig)[0]
+            m = difflib.get_close_matches(base, basenames, n=1, cutoff=cutoff)
+            if not m:
+                if require_equal_counts:
+                    messagebox.showwarning(
+                        "No fuzzy match",
+                        f"Could not match “{orig}” to any file in\n{self.image_folder}"
+                    )
+                    return False
+                else:
+                    continue
+            new_fn = m[0] + os.path.splitext(orig)[1]
+            rec["File"] = new_fn
+            matched.append(new_fn)
+
+        if not matched:
+            messagebox.showinfo("Nothing changed", "No filenames were updated.")
+            return False
+
+        # 3) sort by timestamp‐style basename
+        data.sort(key=lambda r: os.path.splitext(r["File"])[0])
+
+        # 4) overwrite JSON on disk
+        with open(self.json_path, 'w') as fp:
+            json.dump(data, fp, indent=4)
+
+        messagebox.showinfo(
+            "Sync complete",
+            f"Rewrote {len(matched)} filenames and saved:\n{self.json_path}"
+        )
+
+        return True
 
     def load_json(self, path):
         """Load JSON and normalize each record’s Labels."""
