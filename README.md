@@ -80,8 +80,6 @@ This JSON file will contain timestamps, filenames, and bounding box annotations 
   python3 check_json.py
   ```
 
-You can see this video: https://universityoflincoln-my.sharepoint.com/:v:/g/personal/zhuang_lincoln_ac_uk/EdDhudeM1JtKgoPtqU-G04cBBUUzSIFZ8E7Q151D6tjH5Q?e=zQh5OS.
-
 There are two ways of checking the labels:
 
 #### Method 1:
