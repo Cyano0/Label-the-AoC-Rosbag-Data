@@ -35,7 +35,7 @@ After extracting the images and point clouds, the next step is to import them in
 3. Use the Ground Truth Labeller tool to annotate objects of interest in the images.
 4. Ensure that the labels are consistent across different viewpoints and sensors.
 
-For a step-by-step guide, refer to [this tutorial](https://universityoflincoln-my.sharepoint.com/:v:/g/personal/zhuang_lincoln_ac_uk/Ed-UfqKa-zRCorqXSayXZ-gBDXAZqGJH1J2AqO5NizRhAA?e=58oTOc&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D).
+For a step-by-step guide, refer to [this tutorial](https://github.com/Cyano0/Label-the-AoC-Rosbag-Data/releases/download/tutorial-v1/Labelling-Example.mp4) (click to download it).
 
 **If you want to use the YOLOv8 for semi auto labelling, please download the detector following [this page](https://github.com/LCAS/MATLAB_yolov8_human_labeling).**
 
